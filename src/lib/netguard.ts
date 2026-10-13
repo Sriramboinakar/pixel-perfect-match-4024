@@ -76,7 +76,7 @@ export const MODEL_METRICS: Record<
 
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const randInt = (a: number, b: number) => Math.floor(rand(a, b + 1));
-const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+const pick = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)]!;
 
 export const randomIp = (internal = Math.random() > 0.5) =>
   internal
@@ -249,8 +249,8 @@ export function confusionMatrix(model: ModelName): number[][] {
   ];
   const rowErr = [0.8, 1.0, 1.3, 1.4, 1.6, 1.5];
   return SUPPORT.map((n, i) => {
-    const wrong = Math.round(n * err * rowErr[i]);
-    const row = spread[i].map((w) => Math.round(wrong * w));
+    const wrong = Math.round(n * err * rowErr[i]!);
+    const row = spread[i]!.map((w) => Math.round(wrong * w));
     row[i] = n - row.reduce((a, b) => a + b, 0);
     return row;
   });
