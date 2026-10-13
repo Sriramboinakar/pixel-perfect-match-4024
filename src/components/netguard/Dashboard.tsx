@@ -11,15 +11,15 @@ import {
 import {
   CLASSES, CLASS_META, CM_CLASSES, MODELS, MODEL_METRICS, SCENARIOS, confusionMatrix, fmtBytes,
   genFeatures, makeFlow, randomIp,
-  type Flow, type FlowFeatures, type ModelName, type Protocol, type Scenario, type Status, type TrafficClass,
+  type Flow, type FlowFeatures, type ModelName, type Protocol, type Scenario, type Status, type TrafficClass, type Risk,
 } from "@/lib/netguard";
 
-type Alert = { id: number; ts: number; cls: TrafficClass; src: string; risk: string; resolved: boolean };
+type Alert = { id: number; ts: number; cls: TrafficClass; src: string; risk: Risk; resolved: boolean };
 
 const toneText: Record<Status, string> = { normal: "text-safe", suspicious: "text-warn", attack: "text-danger" };
 const toneBg: Record<Status, string> = { normal: "bg-safe", suspicious: "bg-warn", attack: "bg-danger" };
 const toneBorder: Record<Status, string> = { normal: "border-safe/40", suspicious: "border-warn/50", attack: "border-danger/60" };
-const riskTone: Record<string, Status> = { Low: "normal", Medium: "suspicious", High: "attack", Critical: "attack" };
+const riskTone: Record<Risk, Status> = { Low: "normal", Medium: "suspicious", High: "attack", Critical: "attack" };
 
 const CLASS_COLOR: Record<TrafficClass, string> = {
   Normal: "var(--safe)",
@@ -154,7 +154,7 @@ export default function Dashboard() {
   const trigger = (s: Scenario) => {
     const src = randomIp(false);
     const real: Scenario = s === "Mixed Random Traffic"
-      ? SCENARIOS[Math.floor(Math.random() * 7)].name
+      ? SCENARIOS[Math.floor(Math.random() * 7)]!.name
       : s;
     setActive({ s, until: Date.now() + 10000, src });
     runPipeline(genFeatures(real), src);
